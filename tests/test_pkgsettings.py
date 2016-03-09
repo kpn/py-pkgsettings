@@ -76,6 +76,13 @@ class TestPkgsettings(unittest.TestCase):
         with settings(debug=True):
             self.assertEqual(True, settings.debug)
 
+    def test_key_not_found(self):
+        settings = Settings()
+        settings.configure()
+
+        with self.assertRaises(AttributeError):
+            getattr(settings, 'debug')
+
 
 if __name__ == '__main__':
     import sys
