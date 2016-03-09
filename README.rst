@@ -1,9 +1,18 @@
 pkgsettings
 ===========
 
-[![build-status-image]][travis]
-[![coverage-status-image]][codecov]
-[![pypi-version]][pypi]
+.. image:: https://secure.travis-ci.org/kpn-digital/pkgsettings.svg?branch=master
+    :target:  http://travis-ci.org/kpn-digital/pkgsettings?branch=master
+
+.. image:: https://img.shields.io/codecov/c/github/kpn-digital/pkgsettings/master.svg
+    :target: http://codecov.io/github/kpn-digital/pkgsettings?branch=master
+
+.. image:: https://img.shields.io/pypi/v/pkgsettings.svg
+    :target: https://pypi.python.org/pypi/pkgsettings
+
+.. image:: https://readthedocs.org/projects/pkgsettings/badge/?version=latest
+    :target: http://pkgsettings.readthedocs.org/en/latest/?badge=latest
+
 
 Goal
 ----
@@ -54,13 +63,3 @@ Now from within your package you can work with the settings like so:
 
     print(settings.debug) # This will print: True
     print(settings.hello) # This will print: World
-
-
-
-[build-status-image]: https://secure.travis-ci.org/kpn-digital/pkgsettings.svg?branch=master
-[travis]: http://travis-ci.org/kpn-digital/pkgsettings?branch=master
-[coverage-status-image]: https://img.shields.io/codecov/c/github/kpn-digital/pkgsettings/master.svg
-[codecov]: http://codecov.io/github/kpn-digital/pkgsettings?branch=master
-[pypi-version]: https://img.shields.io/pypi/v/pkgsettings.svg
-[pypi]: https://pypi.python.org/pypi/pkgsettings
-
