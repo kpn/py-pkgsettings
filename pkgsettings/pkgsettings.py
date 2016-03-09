@@ -62,11 +62,11 @@ class Settings(object):
             return self
 
     def _override_enable(self):
-        override = SimpleSettings()
+        obj = SimpleSettings()
         for key, new_value in self._override_settings.items():
-            setattr(override, key, new_value)
+            setattr(obj, key, new_value)
 
-        self._chain.insert(0, override)
+        self._chain.insert(0, obj)
 
     def _override_disable(self):
         self._chain.pop(0)

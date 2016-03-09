@@ -40,7 +40,7 @@ Usage
     # Now lets defined the default settings
     settings.configure(hello='World', debug=False)
 
-By calling the configure you actually inject a `layer` of settings.
+By calling the configure you actually inject a ``layer`` of settings.
 When requesting a setting it will go through all layers until it finds the
 requested key.
 
@@ -63,3 +63,43 @@ Now from within your package you can work with the settings like so:
 
     print(settings.debug) # This will print: True
     print(settings.hello) # This will print: World
+
+It is also possible to pass an object instead of kwargs.
+The settings object will call ``getattr(ur_object, key)``
+An example below:
+
+.. code-block:: python
+
+    class MySettings(object):
+        def __init__(self):
+            self.debug = True
+
+    settings = Settings()
+    settings.configure(MySettings())
+    print(settings.debug) # This will print: True
+
+More advanced usage
+-------------------
+
+The settings object can also be used as context manager:
+
+.. code-block:: python
+
+    with settings(debug=True):
+        print(settings.debug) # This will print: True
+
+    print(settings.debug) # This will print: False
+
+Additionally you can also use this as a decorator:
+
+.. code-block:: python
+
+    @settings(debug=True)
+    def go()
+        print(settings.debug) # This will print: True
+
+    go()
+
+    print(settings.debug) # This will print: False
+
+

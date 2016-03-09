@@ -12,41 +12,69 @@ import unittest
 
 from pkgsettings import Settings
 
-settings = Settings()
-settings.configure(test_key='test_value')
-
 
 class TestPkgsettings(unittest.TestCase):
     def setUp(self):
         super(TestPkgsettings, self).setUp()
 
     def test_default_settings(self):
-        self.assertEqual(settings.test_key, 'test_value')
+        settings = Settings()
+        settings.configure(debug=False)
+        self.assertEqual(False, settings.debug)
 
     def test_context_manager(self):
-        with settings(test_key='context_manager'):
-            self.assertEqual(settings.test_key, 'context_manager')
-        self.assertEqual(settings.test_key, 'test_value')
+        settings = Settings()
+        settings.configure(debug=False)
+
+        with settings(debug=True):
+            self.assertEqual(True, settings.debug)
+        self.assertEqual(False, settings.debug)
 
     def test_decorator(self):
-        @settings(test_key='decorator')
+        settings = Settings()
+        settings.configure(debug=False)
+
+        @settings(debug=True)
         def go():
-            self.assertEqual(settings.test_key, 'decorator')
+            self.assertEqual(True, settings.debug)
 
         go()
-        self.assertEqual(settings.test_key, 'test_value')
+        self.assertEqual(False, settings.debug)
 
     def test_decorator_in_class(self):
-        unittest_self = self
+        _self = self
+        settings = Settings()
+        settings.configure(debug=False)
 
         class Dummy(object):
-            @settings(test_key='decorator_in_class')
+            @settings(debug=True)
             def go(self):
-                unittest_self.assertEqual(settings.test_key,
-                                          'decorator_in_class')
+                _self.assertEqual(True, settings.debug)
 
         Dummy().go()
-        self.assertEqual(settings.test_key, 'test_value')
+        self.assertEqual(False, settings.debug)
+
+    def test_as_dict(self):
+        settings = Settings()
+        settings.configure(debug=False)
+
+        with settings(debug=True):
+            self.assertEqual(dict(debug=True), settings.as_dict())
+
+        self.assertEqual(dict(debug=False), settings.as_dict())
+
+    def test_with_object(self):
+        class MySettings(object):
+            def __init__(self):
+                self.debug = False
+
+        settings = Settings()
+        settings.configure(MySettings())
+
+        self.assertEqual(False, settings.debug)
+
+        with settings(debug=True):
+            self.assertEqual(True, settings.debug)
 
 
 if __name__ == '__main__':
