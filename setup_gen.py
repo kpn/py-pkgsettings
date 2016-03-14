@@ -10,7 +10,7 @@ write_setup_py(
     long_description=open('README.rst').read(),
     author="Niels Lensink",
     author_email='niels.lenssink@kpn.com',
-    url='ssh://git@github.com:kpn-digital/pkgsettings.git',
+    url='ssh://git@github.com:kpn-digital/py-pkgsettings.git',
     install_requires=list_requirements('requirements/requirements-base.txt'),
     packages=find_packages(exclude=['pkgsettings.tests*']),
     tests_require=['tox'],
