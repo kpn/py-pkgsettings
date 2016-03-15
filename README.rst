@@ -1,17 +1,17 @@
 pkgsettings
 ===========
 
-.. image:: https://secure.travis-ci.org/kpn-digital/pkgsettings.svg?branch=master
-    :target:  http://travis-ci.org/kpn-digital/pkgsettings?branch=master
+.. image:: https://secure.travis-ci.org/kpn-digital/py-pkgsettings.svg?branch=master
+    :target:  http://travis-ci.org/kpn-digital/py-pkgsettings?branch=master
 
-.. image:: https://img.shields.io/codecov/c/github/kpn-digital/pkgsettings/master.svg
-    :target: http://codecov.io/github/kpn-digital/pkgsettings?branch=master
+.. image:: https://img.shields.io/codecov/c/github/kpn-digital/py-pkgsettings/master.svg
+    :target: http://codecov.io/github/kpn-digital/py-pkgsettings?branch=master
 
 .. image:: https://img.shields.io/pypi/v/pkgsettings.svg
     :target: https://pypi.python.org/pypi/pkgsettings
 
-.. image:: https://readthedocs.org/projects/pkgsettings/badge/?version=latest
-    :target: http://pkgsettings.readthedocs.org/en/latest/?badge=latest
+.. image:: https://readthedocs.org/projects/py-pkgsettings/badge/?version=latest
+    :target: http://py-pkgsettings.readthedocs.org/en/latest/?badge=latest
 
 
 Goal
