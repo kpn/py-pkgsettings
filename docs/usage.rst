@@ -1,7 +1,9 @@
-========
+=====
 Usage
-========
+=====
 
-To use pkgsettings in a project::
+To use pkgsettings in a project
 
-    import pkgsettings
+.. include:: ../README.rst
+   :start-after: .. start_usage
+   :end-before:  .. end_usage
