@@ -13,6 +13,7 @@ Contents:
 
    installation
    usage
+   license
 
 Indices and tables
 ==================

@@ -22,14 +22,17 @@ of configuring a package.
 
 Installation
 ------------
+.. start_installation
 
 .. code-block:: bash
 
     $ pip install pkgsettings
 
+.. end_installation
+
 Usage
 -----
-
+.. start_usage
 .. code-block:: python
 
     from pkgsettings import Settings
@@ -103,3 +106,4 @@ Additionally you can also use this as a decorator:
     print(settings.debug) # This will print: False
 
 
+.. end_usage

@@ -2,6 +2,8 @@
 Installation
 ============
 
-At the command line::
+At the command line
 
-    $ pip install pkgsettings
+.. include:: ../README.rst
+   :start-after: .. start_installation
+   :end-before:  .. end_installation
