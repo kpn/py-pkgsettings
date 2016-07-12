@@ -10,7 +10,8 @@ Tests for `pkgsettings` module.
 
 import unittest
 
-from pkgsettings import Settings
+import pytest
+from pkgsettings import DuplicateConfigureWarning, Settings
 
 
 class TestPkgsettings(unittest.TestCase):
@@ -82,6 +83,23 @@ class TestPkgsettings(unittest.TestCase):
 
         with self.assertRaises(AttributeError):
             getattr(settings, 'debug')
+
+    def test_warning_when_adding_self(self):
+        settings = Settings()
+        settings.configure()
+
+        with pytest.warns(DuplicateConfigureWarning):
+            settings.configure(settings)
+
+    def test_warning_when_adding_duplicate(self):
+        settings = Settings()
+        settings.configure()
+
+        settings2 = Settings()
+        settings2.configure(settings)
+
+        with pytest.warns(DuplicateConfigureWarning):
+            settings.configure(settings2)
 
 
 if __name__ == '__main__':
