@@ -1,4 +1,4 @@
 # -*- coding: utf-8 -*-
-from .pkgsettings import Settings, SimpleSettings
+from .pkgsettings import DuplicateConfigureWarning, Settings, SimpleSettings
 
-__all__ = [Settings, SimpleSettings]
+__all__ = [DuplicateConfigureWarning, Settings, SimpleSettings]

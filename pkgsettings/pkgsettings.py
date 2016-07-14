@@ -1,4 +1,9 @@
 import functools
+import warnings
+
+
+class DuplicateConfigureWarning(UserWarning):
+    pass
 
 
 class SimpleSettings(object):
@@ -26,6 +31,34 @@ class Settings(object):
             result.update(item.as_dict())
         return result
 
+    def children(self):
+        """
+        Tries to return a generator of all settings objects in the chain, recursively.
+        This might not yield all settings objects, if they include
+        other settings objects not by using the children() call.
+        :return: generator of settings objects.
+        """
+        for child in self._chain:
+            yield child
+            children = getattr(child, 'children', None)
+            if callable(children):
+                for settings in children():
+                    yield settings
+
+    def _has_duplicates(self):
+        """
+        Check if there are duplicates in the chained settings objects.
+        :return: True if there are duplicate, False otherwise.
+        """
+        children = set()
+        for settings in self.children():
+            if settings in children:
+                return True
+
+            children.add(settings)
+
+        return False
+
     def configure(self, obj=None, **kwargs):
         """
         Settings that will be used by the time_execution decorator
@@ -41,7 +74,14 @@ class Settings(object):
             for key, new_value in kwargs.items():
                 setattr(obj, key, new_value)
 
+        if obj is self:
+            warnings.warn('Refusing to add ourselves to the chain', DuplicateConfigureWarning)
+            return
+
         self._chain.insert(0, obj)
+
+        if self._has_duplicates():
+            warnings.warn('One setting was added multiple times, maybe a loop?', DuplicateConfigureWarning)
 
     def __enter__(self):
         self._override_enable()
