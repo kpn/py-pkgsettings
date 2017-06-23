@@ -20,5 +20,5 @@ setup(**{'author': 'Niels Lensink',
  'packages': ['pkgsettings'],
  'tests_require': ['tox'],
  'url': 'https://github.com/kpn-digital/py-pkgsettings.git',
- 'version': '0.10.0',
+ 'version': '0.10.1',
  'zip_safe': False})
