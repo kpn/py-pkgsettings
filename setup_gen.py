@@ -12,7 +12,7 @@ write_setup_py(
     author_email='niels.lenssink@kpn.com',
     url='https://github.com/kpn-digital/py-pkgsettings.git',
     install_requires=list_requirements('requirements/requirements-base.txt'),
-    packages=find_packages(exclude=['pkgsettings.tests*']),
+    packages=find_packages(exclude=['tests*']),
     tests_require=['tox'],
     include_package_data=True,
     zip_safe=False,
