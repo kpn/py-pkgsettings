@@ -111,3 +111,15 @@ class Settings(object):
     def _override_disable(self):
         self._chain.pop(0)
         self._override_settings = {}
+
+
+class PrefixedSettings(object):
+
+    def __init__(self, settings, prefix=None):
+        self.settings = settings
+        self.prefix = prefix
+
+    def __getattr__(self, attr):
+        if self.prefix:
+            attr = self.prefix + attr
+        return getattr(self.settings, attr)
