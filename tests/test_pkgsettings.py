@@ -11,7 +11,7 @@ Tests for `pkgsettings` module.
 import unittest
 
 import pytest
-from pkgsettings import DuplicateConfigureWarning, Settings
+from pkgsettings import DuplicateConfigureWarning, PrefixedSettings, Settings
 
 
 class TestPkgsettings(unittest.TestCase):
@@ -100,6 +100,35 @@ class TestPkgsettings(unittest.TestCase):
 
         with pytest.warns(DuplicateConfigureWarning):
             settings.configure(settings2)
+
+
+class TestPrefixedSettings(unittest.TestCase):
+
+    def test_no_prefix(self):
+        ss = Settings()
+        ss.configure(a=1, b='2')
+        settings = PrefixedSettings(ss)
+        self.assertEqual(1, settings.a)
+        self.assertEqual('2', settings.b)
+
+    def test_with_prefix(self):
+        ss = Settings()
+        ss.configure(
+            MY_a=1,
+            OTHER_a=2,
+            a=3,
+            c=5,
+            MY_b='2')
+        settings = PrefixedSettings(ss, 'MY_')
+        self.assertEqual(1, settings.a)
+        self.assertEqual('2', settings.b)
+        with self.assertRaises(AttributeError):
+            a = settings.c
+            self.fail(a)
+
+        with self.assertRaises(AttributeError):
+            a = settings.MY_a
+            self.fail(a)
 
 
 if __name__ == '__main__':

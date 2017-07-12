@@ -40,7 +40,7 @@ Usage
     # Create the settings object for your package to use
     settings = Settings()
 
-    # Now lets defined the default settings
+    # Now let's define the default settings
     settings.configure(hello='World', debug=False)
 
 By calling the configure you actually inject a ``layer`` of settings.
@@ -105,5 +105,30 @@ Additionally you can also use this as a decorator:
 
     print(settings.debug) # This will print: False
 
+Prefixed Settings
+-----------------
+
+If a group of settings share a common prefix, you can make
+use of the ``PrefixedSettings`` class and pass the desired
+prefix as an argument, together with the main settings instance.
+All attributes will be automatically prefixed when accessed.
+
+.. code-block:: python
+
+    from pkgsettings import PrefixedSettings, Settings
+
+    # First create the settings object for your package to use
+    settings = Settings()
+
+    # Suppose some of your settings are all prefixed with 'FOO'
+    settings.configure(FOO_a='a', FOO_b='b', c='c', debug=False)
+
+    # Create a PrefixedSettings instance with the desired prefix
+    foo_settings = PrefixedSettings(settings, 'FOO_')
+
+    foo_settings.a # This will print: a
+    foo_settings.b # This will print: b
+
+    foo_settings.c # This will raise an AttributeError
 
 .. end_usage
