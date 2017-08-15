@@ -1,6 +1,5 @@
 # This Makefile requires the following commands to be available:
-# * virtualenv
-# * python2.7
+# * python3.6
 # * docker
 # * docker-compose
 
@@ -30,7 +29,7 @@ clean: pyclean docsclean
 	@rm -rf venv
 
 venv:
-	@virtualenv -p python2.7 venv
+	@python3.6 -m venv venv
 	@$(PIP) install -U "pip>=7.0" -q
 	@$(PIP) install -r $(DEPS)
 

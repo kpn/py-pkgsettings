@@ -9,4 +9,3 @@ pytest-cov
 
 # docs
 sphinx
-sphinxcontrib-plantuml

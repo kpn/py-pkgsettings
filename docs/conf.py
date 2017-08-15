@@ -37,7 +37,6 @@ extensions = [
     'sphinx.ext.coverage',
     'sphinx.ext.mathjax',
     'sphinx.ext.napoleon',
-    'sphinxcontrib.plantuml',
 ]
 
 plantuml_jar_path = os.path.abspath('./_plantuml/plantuml.jar')
