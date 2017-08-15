@@ -1,6 +1,7 @@
 tox
 isort
 flake8
+pkgversion
 
 # PyTest for running the tests.
 pytest
@@ -8,4 +9,3 @@ pytest-cov
 
 # docs
 sphinx
-sphinxcontrib-plantuml
