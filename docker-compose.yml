@@ -1,5 +1,0 @@
-app:
-  build: .
-  volumes:
-    - .:/app
-  command: make build

@@ -1,3 +1,18 @@
-# Additional packages
--r requirements/requirements-base.txt
--r requirements/requirements-testing.txt
+# Tests
+tox
+pytest
+pytest-cov
+
+# Code style
+isort
+black
+flake8
+mypy
+
+# Distribution
+twine
+wheel
+
+# gitchangelog
+gitchangelog
+pystache

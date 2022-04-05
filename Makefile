@@ -1,62 +1,75 @@
 # This Makefile requires the following commands to be available:
-# * python3.6
+# * python3.10
 # * docker
-# * docker-compose
 
-DEPS:=requirements.txt
-DOCKER_COMPOSE=$(shell which docker-compose)
+SRC:=pkgsettings tests setup.py
 
-PIP:="venv/bin/pip"
-CMD_FROM_VENV:=". venv/bin/activate; which"
-TOX=$(shell "$(CMD_FROM_VENV)" "tox")
-PYTHON=$(shell "$(CMD_FROM_VENV)" "python")
-TOX_PY_LIST="$(shell $(TOX) -l | grep ^py | xargs | sed -e 's/ /,/g')"
-
-.PHONY: clean docsclean pyclean test lint isort docs docker setup.py
-
-tox: clean venv
-	$(TOX)
-
+.PHONY: pyclean
 pyclean:
-	@find . -name *.pyc -delete
-	@rm -rf *.egg-info build
-	@rm -rf coverage.xml .coverage
+	-find . -name "*.pyc" -delete
+	-rm -rf *.egg-info build
+	-rm -rf coverage*.xml .coverage
 
-docsclean:
-	@rm -fr docs/_build/
+.PHONY: clean
+clean: pyclean
+	-rm -rf venv
+	-rm -rf .tox
 
-clean: pyclean docsclean
-	@rm -rf venv
-
+venv: PYTHON?=python3.10
 venv:
-	@python3.6 -m venv venv
-	@$(PIP) install -U "pip>=7.0" -q
-	@$(PIP) install -r $(DEPS)
+	$(PYTHON) -m venv venv
+	# FIXME: unpin when https://github.com/pypa/pip/issues/9215 is fixed
+	venv/bin/pip install -U "pip==20.2" -q
+	venv/bin/pip install -r requirements.txt '.[all]'
 
-test: venv pyclean
-	$(TOX) -e $(TOX_PY_LIST)
+## Code style
+.PHONY: lint
+lint: lint/black lint/flake8 lint/isort lint/mypy
 
-test/%: venv pyclean
-	$(TOX) -e $(TOX_PY_LIST) -- $*
+.PHONY: lint/black
+lint/black: venv
+	venv/bin/black --diff --check $(SRC)
 
-lint: venv
-	@$(TOX) -e lint
-	@$(TOX) -e isort-check
+.PHONY: lint/flake8
+lint/flake8: venv
+	venv/bin/flake8 $(SRC)
 
-isort: venv
-	@$(TOX) -e isort-fix
+.PHONY: lint/isort
+lint/isort: venv
+	venv/bin/isort --diff --check $(SRC)
 
-docs: venv
-	@$(TOX) -e docs
+.PHONY: lint/mypy
+lint/mypy: venv
+	venv/bin/mypy $(SRC)
 
-docker:
-	$(DOCKER_COMPOSE) run --rm app bash
+.PHONY: format
+format: format/isort format/black
 
-docker/%:
-	$(DOCKER_COMPOSE) run --rm app make $*
+.PHONY: format/isort
+format/isort: venv
+	venv/bin/isort $(SRC)
 
-setup.py: venv
-	$(PYTHON) setup_gen.py
-	@$(PYTHON) setup.py check --restructuredtext
+.PHONY: format/black
+format/black: venv
+	venv/bin/black $(SRC)
 
-build: clean venv setup.py tox
+## Tests
+.PHONY: unittests
+unittests: TOX_ENV?=ALL
+unittests: TOX_EXTRA_PARAMS?=""
+unittests: venv
+	venv/bin/tox -e $(TOX_ENV) $(TOX_EXTRA_PARAMS)
+
+.PHONY: test
+test: pyclean unittests
+
+## Distribution
+.PHONY: changelog
+changelog:
+	venv/bin/gitchangelog
+
+.PHONY: build
+build: venv
+	-rm -rf dist build
+	venv/bin/python setup.py sdist bdist_wheel
+	venv/bin/twine check dist/*

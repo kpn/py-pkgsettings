@@ -12,7 +12,6 @@ class SimpleSettings(object):
 
 
 class Settings(object):
-
     def __init__(self):
         self._chain = [SimpleSettings()]
         self._override_settings = {}
@@ -40,7 +39,7 @@ class Settings(object):
         """
         for child in self._chain:
             yield child
-            children = getattr(child, 'children', None)
+            children = getattr(child, "children", None)
             if callable(children):
                 for settings in children():
                     yield settings
@@ -75,13 +74,13 @@ class Settings(object):
                 setattr(obj, key, new_value)
 
         if obj is self:
-            warnings.warn('Refusing to add ourselves to the chain', DuplicateConfigureWarning)
+            warnings.warn("Refusing to add ourselves to the chain", DuplicateConfigureWarning)
             return
 
         self._chain.insert(0, obj)
 
         if self._has_duplicates():
-            warnings.warn('One setting was added multiple times, maybe a loop?', DuplicateConfigureWarning)
+            warnings.warn("One setting was added multiple times, maybe a loop?", DuplicateConfigureWarning)
 
     def __enter__(self):
         self._override_enable()
@@ -91,6 +90,7 @@ class Settings(object):
 
     def __call__(self, func=None, *args, **kwargs):
         if func:
+
             @functools.wraps(func)
             def inner(*args, **kwargs):
                 with self:
@@ -114,7 +114,6 @@ class Settings(object):
 
 
 class PrefixedSettings(object):
-
     def __init__(self, settings, prefix=None):
         self.settings = settings
         self.prefix = prefix

@@ -11,6 +11,7 @@ Tests for `pkgsettings` module.
 import unittest
 
 import pytest
+
 from pkgsettings import DuplicateConfigureWarning, PrefixedSettings, Settings
 
 
@@ -82,7 +83,7 @@ class TestPkgsettings(unittest.TestCase):
         settings.configure()
 
         with self.assertRaises(AttributeError):
-            getattr(settings, 'debug')
+            getattr(settings, "debug")
 
     def test_warning_when_adding_self(self):
         settings = Settings()
@@ -103,25 +104,19 @@ class TestPkgsettings(unittest.TestCase):
 
 
 class TestPrefixedSettings(unittest.TestCase):
-
     def test_no_prefix(self):
         ss = Settings()
-        ss.configure(a=1, b='2')
+        ss.configure(a=1, b="2")
         settings = PrefixedSettings(ss)
         self.assertEqual(1, settings.a)
-        self.assertEqual('2', settings.b)
+        self.assertEqual("2", settings.b)
 
     def test_with_prefix(self):
         ss = Settings()
-        ss.configure(
-            MY_a=1,
-            OTHER_a=2,
-            a=3,
-            c=5,
-            MY_b='2')
-        settings = PrefixedSettings(ss, 'MY_')
+        ss.configure(MY_a=1, OTHER_a=2, a=3, c=5, MY_b="2")
+        settings = PrefixedSettings(ss, "MY_")
         self.assertEqual(1, settings.a)
-        self.assertEqual('2', settings.b)
+        self.assertEqual("2", settings.b)
         with self.assertRaises(AttributeError):
             a = settings.c
             self.fail(a)
@@ -131,7 +126,7 @@ class TestPrefixedSettings(unittest.TestCase):
             self.fail(a)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     import sys
 
     sys.exit(unittest.main())
