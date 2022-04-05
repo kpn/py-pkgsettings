@@ -1,183 +1,45 @@
+#!/usr/bin/env python
+# setuptools doesn't support type hints for now:
+# https://github.com/pypa/setuptools/issues/2345
+# so we ignoring mypy checks on this package
+from setuptools import find_packages, setup
 
-from setuptools import setup
-setup(**{'author': 'Niels Lensink',
- 'author_email': 'niels.lenssink@kpn.com',
- 'classifiers': ['Development Status :: 5 - Production/Stable',
-                 'Environment :: Web Environment',
-                 'Intended Audience :: Developers',
-                 'Operating System :: OS Independent',
-                 'Programming Language :: Python',
-                 'Programming Language :: Python :: 2',
-                 'Programming Language :: Python :: 2.7',
-                 'Programming Language :: Python :: 3',
-                 'Programming Language :: Python :: 3.5',
-                 'Programming Language :: Python :: 3.6',
-                 'Topic :: Internet :: WWW/HTTP'],
- 'description': 'Python package to ease the configuration of packages',
- 'include_package_data': True,
- 'install_requires': [],
- 'long_description': 'pkgsettings\n'
-                     '===========\n'
-                     '\n'
-                     '.. image:: '
-                     'https://secure.travis-ci.org/kpn-digital/py-pkgsettings.svg?branch=master\n'
-                     '    :target:  '
-                     'http://travis-ci.org/kpn-digital/py-pkgsettings?branch=master\n'
-                     '\n'
-                     '.. image:: '
-                     'https://img.shields.io/codecov/c/github/kpn-digital/py-pkgsettings/master.svg\n'
-                     '    :target: '
-                     'http://codecov.io/github/kpn-digital/py-pkgsettings?branch=master\n'
-                     '\n'
-                     '.. image:: '
-                     'https://img.shields.io/pypi/v/pkgsettings.svg\n'
-                     '    :target: https://pypi.python.org/pypi/pkgsettings\n'
-                     '\n'
-                     '.. image:: '
-                     'https://readthedocs.org/projects/py-pkgsettings/badge/?version=latest\n'
-                     '    :target: '
-                     'http://py-pkgsettings.readthedocs.org/en/latest/?badge=latest\n'
-                     '\n'
-                     '\n'
-                     'Goal\n'
-                     '----\n'
-                     '\n'
-                     'The goal of this package is to offer an easy, generic '
-                     'and extendable way\n'
-                     'of configuring a package.\n'
-                     '\n'
-                     'Installation\n'
-                     '------------\n'
-                     '.. start_installation\n'
-                     '\n'
-                     '.. code-block:: bash\n'
-                     '\n'
-                     '    $ pip install pkgsettings\n'
-                     '\n'
-                     '.. end_installation\n'
-                     '\n'
-                     'Usage\n'
-                     '-----\n'
-                     '.. start_usage\n'
-                     '.. code-block:: python\n'
-                     '\n'
-                     '    from pkgsettings import Settings\n'
-                     '\n'
-                     '    # Create the settings object for your package to '
-                     'use\n'
-                     '    settings = Settings()\n'
-                     '\n'
-                     "    # Now let's define the default settings\n"
-                     "    settings.configure(hello='World', debug=False)\n"
-                     '\n'
-                     'By calling the configure you actually inject a ``layer`` '
-                     'of settings.\n'
-                     'When requesting a setting it will go through all layers '
-                     'until it finds the\n'
-                     'requested key.\n'
-                     '\n'
-                     'Now if someone starts using your package it can easily '
-                     'modify the active\n'
-                     'settings of your package by calling the configure '
-                     'again.\n'
-                     '\n'
-                     '.. code-block:: python\n'
-                     '\n'
-                     '    from my_awesome_package.conf import settings\n'
-                     '\n'
-                     '    # Lets change the configuration here\n'
-                     '    settings.configure(debug=True)\n'
-                     '\n'
-                     '\n'
-                     'Now from within your package you can work with the '
-                     'settings like so:\n'
-                     '\n'
-                     '.. code-block:: python\n'
-                     '\n'
-                     '    from conf import settings\n'
-                     '\n'
-                     '    print(settings.debug) # This will print: True\n'
-                     '    print(settings.hello) # This will print: World\n'
-                     '\n'
-                     'It is also possible to pass an object instead of '
-                     'kwargs.\n'
-                     'The settings object will call ``getattr(ur_object, '
-                     'key)``\n'
-                     'An example below:\n'
-                     '\n'
-                     '.. code-block:: python\n'
-                     '\n'
-                     '    class MySettings(object):\n'
-                     '        def __init__(self):\n'
-                     '            self.debug = True\n'
-                     '\n'
-                     '    settings = Settings()\n'
-                     '    settings.configure(MySettings())\n'
-                     '    print(settings.debug) # This will print: True\n'
-                     '\n'
-                     'More advanced usage\n'
-                     '-------------------\n'
-                     '\n'
-                     'The settings object can also be used as context '
-                     'manager:\n'
-                     '\n'
-                     '.. code-block:: python\n'
-                     '\n'
-                     '    with settings(debug=True):\n'
-                     '        print(settings.debug) # This will print: True\n'
-                     '\n'
-                     '    print(settings.debug) # This will print: False\n'
-                     '\n'
-                     'Additionally you can also use this as a decorator:\n'
-                     '\n'
-                     '.. code-block:: python\n'
-                     '\n'
-                     '    @settings(debug=True)\n'
-                     '    def go()\n'
-                     '        print(settings.debug) # This will print: True\n'
-                     '\n'
-                     '    go()\n'
-                     '\n'
-                     '    print(settings.debug) # This will print: False\n'
-                     '\n'
-                     'Prefixed Settings\n'
-                     '-----------------\n'
-                     '\n'
-                     'If a group of settings share a common prefix, you can '
-                     'make\n'
-                     'use of the ``PrefixedSettings`` class and pass the '
-                     'desired\n'
-                     'prefix as an argument, together with the main settings '
-                     'instance.\n'
-                     'All attributes will be automatically prefixed when '
-                     'accessed.\n'
-                     '\n'
-                     '.. code-block:: python\n'
-                     '\n'
-                     '    from pkgsettings import PrefixedSettings, Settings\n'
-                     '\n'
-                     '    # First create the settings object for your package '
-                     'to use\n'
-                     '    settings = Settings()\n'
-                     '\n'
-                     '    # Suppose some of your settings are all prefixed '
-                     "with 'FOO'\n"
-                     "    settings.configure(FOO_a='a', FOO_b='b', c='c', "
-                     'debug=False)\n'
-                     '\n'
-                     '    # Create a PrefixedSettings instance with the '
-                     'desired prefix\n'
-                     "    foo_settings = PrefixedSettings(settings, 'FOO_')\n"
-                     '\n'
-                     '    foo_settings.a # This will print: a\n'
-                     '    foo_settings.b # This will print: b\n'
-                     '\n'
-                     '    foo_settings.c # This will raise an AttributeError\n'
-                     '\n'
-                     '.. end_usage\n',
- 'name': 'pkgsettings',
- 'packages': ['pkgsettings'],
- 'tests_require': ['tox'],
- 'url': 'https://github.com/kpn-digital/py-pkgsettings.git',
- 'version': '0.12.0',
- 'zip_safe': False})
+with open("README.rst") as f:
+    long_description = f.read()
+
+
+setup(
+    name="pkgsettings",
+    use_scm_version=True,
+    setup_requires=["setuptools_scm"],
+    description="Python package to ease the configuration of packages",
+    long_description=long_description,
+    long_description_content_type="text/x-rst",
+    author="KPN DE Platform",
+    author_email="de-platform@kpn.com",
+    url="https://github.com/kpn/py-pkgsettings",
+    install_requires=[],
+    extras_require={
+        "all": ["elasticsearch>=5.0.0,<7.0.0"],
+        "elasticsearch": ["elasticsearch>=5.0.0,<7.0.0"],
+    },
+    packages=find_packages(exclude=["tests*"]),
+    tests_require=["tox"],
+    include_package_data=True,
+    zip_safe=False,
+    classifiers=[
+        "Development Status :: 5 - Production/Stable",
+        "Environment :: Web Environment",
+        "Intended Audience :: Developers",
+        "Operating System :: OS Independent",
+        "License :: OSI Approved :: Apache Software License",
+        "Programming Language :: Python",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
+        "Topic :: Internet :: WWW/HTTP",
+        "Topic :: Software Development :: Libraries :: Python Modules",
+    ],
+)
