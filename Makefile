@@ -1,6 +1,5 @@
 # This Makefile requires the following commands to be available:
 # * python3.10
-# * docker
 
 SRC:=pkgsettings tests setup.py
 

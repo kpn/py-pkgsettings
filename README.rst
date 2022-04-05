@@ -1,17 +1,26 @@
 pkgsettings
 ===========
 
-.. image:: https://secure.travis-ci.org/kpn-digital/py-pkgsettings.svg?branch=master
-    :target:  https://travis-ci.org/kpn-digital/py-pkgsettings?branch=master
+.. image:: https://github.com/kpn/py-pkgsettings/actions/workflows/tests.yml/badge.svg?branch=master
+    :target:  https://github.com/kpn/py-pkgsettings/actions/workflows/tests.yml
 
 .. image:: https://img.shields.io/codecov/c/github/kpn-digital/py-pkgsettings/master.svg
     :target: https://codecov.io/github/kpn-digital/py-pkgsettings?branch=master
 
 .. image:: https://img.shields.io/pypi/v/pkgsettings.svg
-    :target: https://pypi.python.org/pypi/pkgsettings
+    :target: https://pypi.org/project/pkgsettings
+
+.. image:: https://img.shields.io/pypi/pyversions/pkgsettings.svg
+    :target: https://pypi.org/project/pkgsettings
 
 .. image:: https://readthedocs.org/projects/py-pkgsettings/badge/?version=latest
     :target: https://py-pkgsettings.readthedocs.org/en/latest/?badge=latest
+
+.. image:: https://img.shields.io/pypi/l/pkgsettings.svg
+    :target: https://pypi.org/project/pkgsettings
+
+.. image:: https://img.shields.io/badge/code%20style-black-000000.svg
+    :target: https://github.com/kpn/py-pkgsettings
 
 
 Goal
