@@ -4,7 +4,7 @@
 # so we ignoring mypy checks on this package
 from setuptools import find_packages, setup
 
-with open("README.rst") as f:
+with open("README.md") as f:
     long_description = f.read()
 
 
@@ -14,7 +14,7 @@ setup(
     setup_requires=["setuptools_scm"],
     description="Python package to ease the configuration of packages",
     long_description=long_description,
-    long_description_content_type="text/x-rst",
+    long_description_content_type="text/markdown",
     author="KPN DE Platform",
     author_email="de-platform@kpn.com",
     url="https://github.com/kpn/py-pkgsettings",
