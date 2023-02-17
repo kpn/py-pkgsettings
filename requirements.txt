@@ -8,6 +8,7 @@ isort
 black
 flake8
 mypy
+types-setuptools
 
 # Distribution
 twine

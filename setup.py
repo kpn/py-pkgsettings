@@ -1,7 +1,4 @@
 #!/usr/bin/env python
-# setuptools doesn't support type hints for now:
-# https://github.com/pypa/setuptools/issues/2345
-# so we ignoring mypy checks on this package
 from setuptools import find_packages, setup
 
 with open("README.md") as f:
@@ -19,10 +16,6 @@ setup(
     author_email="de-platform@kpn.com",
     url="https://github.com/kpn/py-pkgsettings",
     install_requires=[],
-    extras_require={
-        "all": ["elasticsearch>=5.0.0,<7.0.0"],
-        "elasticsearch": ["elasticsearch>=5.0.0,<7.0.0"],
-    },
     packages=find_packages(exclude=["tests*"]),
     tests_require=["tox"],
     include_package_data=True,

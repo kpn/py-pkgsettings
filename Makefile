@@ -1,5 +1,5 @@
 # This Makefile requires the following commands to be available:
-# * python3.10
+# * python3.11
 
 SRC:=pkgsettings tests setup.py
 
@@ -14,11 +14,10 @@ clean: pyclean
 	-rm -rf venv
 	-rm -rf .tox
 
-venv: PYTHON?=python3.10
+venv: PYTHON?=python3.11
 venv:
 	$(PYTHON) -m venv venv
-	# FIXME: unpin when https://github.com/pypa/pip/issues/9215 is fixed
-	venv/bin/pip install -U "pip==20.2" -q
+	venv/bin/pip install -U pip -q
 	venv/bin/pip install -r requirements.txt '.[all]'
 
 ## Code style
