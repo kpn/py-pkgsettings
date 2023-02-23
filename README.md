@@ -31,12 +31,8 @@ settings = Settings()
 settings.configure(hello='World', debug=False)
 ```
 
-By calling the configure you actually inject a `layer` of settings. When
-requesting a setting it will go through all layers until it finds the
-requested key.
-
 Now if someone starts using your package it can easily modify the active
-settings of your package by calling the configure again.
+settings of your package by calling the `configure()` again.
 
 ``` python
 from my_awesome_package.conf import settings
@@ -69,7 +65,7 @@ print(settings.debug) # This will print: True
 
 ## More advanced usage
 
-The settings object can also be used as context manager:
+The `settings` object can also be used as context manager:
 
 ``` python
 with settings(debug=True):
@@ -78,7 +74,7 @@ with settings(debug=True):
 print(settings.debug) # This will print: False
 ```
 
-Additionally you can also use this as a decorator:
+Additionally, you can also use this as a decorator:
 
 ``` python
 @settings(debug=True)

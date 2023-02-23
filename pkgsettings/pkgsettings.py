@@ -69,16 +69,14 @@ class Settings(object):
             duration_field (string): Name of the field to store the duration value
         """
         if not obj:
-            obj = SimpleSettings()
+            top_layer = self._chain[0]
             for key, new_value in kwargs.items():
-                setattr(obj, key, new_value)
-
-        if obj is self:
+                setattr(top_layer, key, new_value)
+        elif obj is self:
             warnings.warn("Refusing to add ourselves to the chain", DuplicateConfigureWarning)
             return
-
-        self._chain.insert(0, obj)
-
+        else:
+            self._chain.insert(0, obj)
         if self._has_duplicates():
             warnings.warn("One setting was added multiple times, maybe a loop?", DuplicateConfigureWarning)
 
