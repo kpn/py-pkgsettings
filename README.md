@@ -8,10 +8,7 @@
 [![image](https://img.shields.io/pypi/l/pkgsettings.svg)](https://pypi.org/project/pkgsettings)
 [![image](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/kpn/py-pkgsettings)
 
-## Goal
-
-The goal of this package is to offer an easy, generic and extendable way
-of configuring a package.
+Easy, generic and extendable way of configuring a package.
 
 ## Installation
 
@@ -19,9 +16,83 @@ of configuring a package.
 $ pip install pkgsettings
 ```
 
-## Usage
+## Quickstart with [dataclasses](https://docs.python.org/3/library/dataclasses.html)
 
-``` python
+### Package code
+
+A configurable package should define a settings dataclass, and a global singleton:
+
+```python
+# `your_package/conf.py`
+
+from dataclasses import dataclass
+from pkgsettings import Settings
+
+
+@dataclass
+class PackageSettings(Settings):
+    hello: str = "World"
+    debug: bool = False
+
+
+settings = PackageSettings()
+```
+
+### Application code
+
+The defaults can be changed by their individual attributes:
+
+```python
+from your_package.conf import settings
+
+settings.debug = True
+```
+
+Or, with the `configure()` method:
+
+```python
+from your_package.conf import settings
+
+settings.configure(debug=True, hello="Universe")
+```
+
+The `configure()` also supports the positional argument to apply configuration from a different object:
+
+```python
+from django.conf import settings as django_settings
+from your_package.conf import settings as package_settings
+
+package_settings.configure(django_settings)
+```
+
+The `settings` object can be used as context manager:
+
+```python
+from your_package.conf import settings
+
+with settings(debug=True):
+    assert settings.debug
+
+assert not settings.debug
+```
+
+Additionally, you can also use it as a decorator:
+
+```python
+from your_package.conf import settings
+
+@settings(debug=True)
+def go():
+    assert settings.debug
+
+go()
+
+assert not settings.debug
+```
+
+## Legacy-style usage
+
+```python
 from pkgsettings import Settings
 
 # Create the settings object for your package to use
@@ -31,14 +102,14 @@ settings = Settings()
 settings.configure(hello='World', debug=False)
 ```
 
-By calling the configure you actually inject a `layer` of settings. When
+By calling the `configure()` you actually inject a `layer` of settings. When
 requesting a setting it will go through all layers until it finds the
 requested key.
 
 Now if someone starts using your package it can easily modify the active
 settings of your package by calling the configure again.
 
-``` python
+```python
 from my_awesome_package.conf import settings
 
 # Lets change the configuration here
@@ -47,7 +118,7 @@ settings.configure(debug=True)
 
 Now from within your package you can work with the settings like so:
 
-``` python
+```python
 from conf import settings
 
 print(settings.debug) # This will print: True
@@ -57,7 +128,7 @@ print(settings.hello) # This will print: World
 It is also possible to pass an object instead of kwargs. The settings
 object will call `getattr(ur_object, key)` An example below:
 
-``` python
+```python
 class MySettings(object):
     def __init__(self):
         self.debug = True
@@ -71,18 +142,18 @@ print(settings.debug) # This will print: True
 
 The settings object can also be used as context manager:
 
-``` python
+```python
 with settings(debug=True):
     print(settings.debug) # This will print: True
 
 print(settings.debug) # This will print: False
 ```
 
-Additionally you can also use this as a decorator:
+Additionally, you can also use this as a decorator:
 
-``` python
+```python
 @settings(debug=True)
-def go()
+def go():
     print(settings.debug) # This will print: True
 
 go()
@@ -97,7 +168,7 @@ If a group of settings share a common prefix, you can make use of the
 together with the main settings instance. All attributes will be
 automatically prefixed when accessed.
 
-``` python
+```python
 from pkgsettings import PrefixedSettings, Settings
 
 # First create the settings object for your package to use

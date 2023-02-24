@@ -1,3 +1,3 @@
-from .pkgsettings import DuplicateConfigureWarning, PrefixedSettings, Settings, SimpleSettings
+from .pkgsettings import DuplicateConfigureWarning, PrefixedSettings, Settings
 
-__all__ = ["DuplicateConfigureWarning", "PrefixedSettings", "Settings", "SimpleSettings"]
+__all__ = ["DuplicateConfigureWarning", "PrefixedSettings", "Settings"]
