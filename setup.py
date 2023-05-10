@@ -15,7 +15,9 @@ setup(
     author="KPN DE Platform",
     author_email="de-platform@kpn.com",
     url="https://github.com/kpn/py-pkgsettings",
-    install_requires=[],
+    install_requires=[
+        "typing-extensions>=4.5.0,<5.0.0",
+    ],
     packages=find_packages(exclude=["tests*"]),
     tests_require=["tox"],
     include_package_data=True,
