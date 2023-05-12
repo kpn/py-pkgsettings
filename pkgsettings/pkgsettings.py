@@ -1,5 +1,6 @@
 import functools
 import warnings
+from collections import deque
 
 
 class DuplicateConfigureWarning(UserWarning):
@@ -13,7 +14,7 @@ class SimpleSettings(object):
 
 class Settings(object):
     def __init__(self):
-        self._chain = [SimpleSettings()]
+        self._chain = deque([SimpleSettings()])
         self._override_settings = {}
 
     def __getattr__(self, attr):
@@ -77,7 +78,7 @@ class Settings(object):
             warnings.warn("Refusing to add ourselves to the chain", DuplicateConfigureWarning)
             return
 
-        self._chain.insert(0, obj)
+        self._chain.appendleft(obj)
 
         if self._has_duplicates():
             warnings.warn("One setting was added multiple times, maybe a loop?", DuplicateConfigureWarning)
@@ -106,10 +107,10 @@ class Settings(object):
         for key, new_value in self._override_settings.items():
             setattr(obj, key, new_value)
 
-        self._chain.insert(0, obj)
+        self._chain.appendleft(obj)
 
     def _override_disable(self):
-        self._chain.pop(0)
+        self._chain.popleft()
         self._override_settings = {}
 
 
