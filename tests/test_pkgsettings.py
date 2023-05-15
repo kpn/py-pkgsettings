@@ -1,3 +1,6 @@
+# mypy: allow-untyped-defs
+from dataclasses import dataclass
+
 from pytest import fail, raises, warns
 
 from pkgsettings import DuplicateConfigureWarning, PrefixedSettings, Settings
@@ -34,7 +37,7 @@ def test_decorator_in_class():
     settings = Settings()
     settings.configure(debug=False)
 
-    class Dummy(object):
+    class Dummy:
         @settings(debug=True)
         def go(self):
             assert settings.debug
@@ -54,9 +57,9 @@ def test_as_dict():
 
 
 def test_with_object():
+    @dataclass(frozen=True)
     class MySettings:
-        def __init__(self):
-            self.debug = False
+        debug: bool = False
 
     settings = Settings()
     settings.configure(MySettings())

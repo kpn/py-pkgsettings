@@ -38,7 +38,11 @@ lint/isort: venv
 
 .PHONY: lint/mypy
 lint/mypy: venv
-	venv/bin/mypy $(SRC)
+	venv/bin/mypy --python-version 3.7 -p pkgsettings -p tests
+	venv/bin/mypy --python-version 3.8 -p pkgsettings -p tests
+	venv/bin/mypy --python-version 3.9 -p pkgsettings -p tests
+	venv/bin/mypy --python-version 3.10 -p pkgsettings -p tests
+	venv/bin/mypy --python-version 3.11 -p pkgsettings -p tests
 
 .PHONY: format
 format: format/isort format/black
