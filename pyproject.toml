@@ -30,3 +30,4 @@ requires = ["setuptools>=42", "wheel", "setuptools_scm[toml]>=3.4"]
 
 [tool.mypy]
 check_untyped_defs = true
+strict = true

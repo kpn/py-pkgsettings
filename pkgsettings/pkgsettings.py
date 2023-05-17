@@ -1,12 +1,22 @@
 from __future__ import annotations
 
 import functools
+import sys
 import warnings
-from typing import Any, Callable, Dict, Generator, Optional, TypeVar, overload
+from collections.abc import Generator
+from types import TracebackType
+from typing import Any, Callable, cast, overload
 
-from typing_extensions import Self
+from typing_extensions import Literal, ParamSpec, Self, TypeVar
 
-_F = TypeVar("_F", bound=Callable[..., Any])
+if sys.version_info < (3, 9):
+    from typing import ContextManager as AbstractContextManager
+else:
+    from contextlib import AbstractContextManager
+
+
+P = ParamSpec("P")
+T = TypeVar("T")
 
 
 class DuplicateConfigureWarning(UserWarning):
@@ -20,14 +30,14 @@ class SimpleSettings:
     Layers get stacked on each other in `Settings`, so allowing to override specific options.
     """
 
-    def as_dict(self) -> Dict[str, Any]:
+    def as_dict(self) -> dict[str, Any]:
         return self.__dict__
 
 
-class Settings:
+class Settings(AbstractContextManager["Settings"]):
     def __init__(self) -> None:
         self._chain = [SimpleSettings()]
-        self._override_settings: Dict[str, Any] = {}
+        self._override_settings: dict[str, Any] = {}
 
     def __getattr__(self, attr: str) -> Any:
         for item in self._chain:
@@ -37,7 +47,7 @@ class Settings:
                 pass
         raise AttributeError(attr)
 
-    def as_dict(self) -> Dict[str, Any]:
+    def as_dict(self) -> dict[str, Any]:
         result = {}
         for item in reversed(self._chain):
             result.update(item.as_dict())
@@ -55,8 +65,7 @@ class Settings:
             yield child
             children = getattr(child, "children", None)
             if callable(children):
-                for settings in children():
-                    yield settings
+                yield from children()
 
     def _has_duplicates(self) -> bool:
         """
@@ -73,7 +82,7 @@ class Settings:
 
         return False
 
-    def configure(self, obj: Optional[Any] = None, **kwargs) -> None:
+    def configure(self, obj: Any = None, **kwargs: Any) -> None:
         """
         Settings that will be used by the time_execution decorator
 
@@ -98,18 +107,23 @@ class Settings:
         self._override_enable()
         return self
 
-    def __exit__(self, exc_type, exc_value, traceback) -> None:
+    def __exit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc_value: BaseException | None,
+        traceback: TracebackType | None,
+    ) -> None:
         self._override_disable()
 
     @overload
-    def __call__(self, func: _F) -> _F:
+    def __call__(self, func: Callable[P, T]) -> Callable[P, T]:
         ...
 
     @overload
-    def __call__(self, **override_settings: Any) -> Self:
+    def __call__(self, func: Literal[None] = None, **override_settings: Any) -> Self:
         ...
 
-    def __call__(self, func=None, **override_settings: Any):
+    def __call__(self, func: Callable[P, T] | None = None, **override_settings: Any) -> Self | Callable[P, T]:
         """
         Override settings for a decorated function.
 
@@ -121,18 +135,22 @@ class Settings:
              >>>     assert settings.option == 42
         """
 
-        if func:
+        if func is not None:
 
             @functools.wraps(func)
-            def inner(*args, **kwargs):
+            def inner(*args: P.args, **kwargs: P.kwargs) -> T:
                 with self:
-                    return func(*args, **kwargs)
+                    # Cast is necessary since otherwise mypy thinks
+                    # that the inner function is Optional[Callable]
+                    # type. See related bug
+                    # https://github.com/python/mypy/issues/15251
+                    return cast(Callable[P, T], func)(*args, **kwargs)
 
             return inner
 
         elif override_settings:
             self._override_settings = override_settings
-            return self
+        return self
 
     def _override_enable(self) -> None:
         obj = SimpleSettings()
@@ -147,7 +165,7 @@ class Settings:
 
 
 class PrefixedSettings:
-    def __init__(self, settings: Any, prefix: Optional[str] = None) -> None:
+    def __init__(self, settings: Any, prefix: str | None = None) -> None:
         self.settings = settings
         self.prefix = prefix
 
